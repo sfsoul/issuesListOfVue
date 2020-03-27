@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style></style>
+</head>
+<body>
+<div id="app">
+    <p ref="info">{{message}}</p>
+</div>
+<script src="../src/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello world'
+        },
+        methods: {
+
+        },
+        beforeCreate () {
+            console.group('beforeCreate hook========>');
+            console.log("%c%s", "color:red", 'beforeCreate el ===>', this.$el);
+            console.log("%c%s", "color:red", 'beforeCreate data ===>', this.$data);
+            console.log("%c%s", "color:red", 'beforeCreate message ===>', this.message);
+        },
+        created () {
+            console.group('created hook========>');
+            console.log("%c%s", "color:red", 'created el ===>', this.$el);
+            console.log("%c%s", "color:red",'created data ===>', this.$data);
+            console.log("%c%s", "color:red",'created message ===>', this.message);
+            // 准确说：无法通过 $ref 来操作DOM，因为此时DOM模板还未编译，即还未解析 {{message}}
+            const pNode = document.querySelector('p');
+            console.log("%c%s", "color:red",'created 访问DOM ===>', pNode, pNode.textContent);
+            console.log("%c%s", "color:red",'created $refs.info ===>', this.$refs.info);
+        },
+        // 挂载之前调用，相关的render函数首次被调用
+        beforeMount () {
+            console.group('beforeMount hook========>');
+            console.log("%c%s", "color:red", 'beforeMount el====>', this.$el);
+            console.log("%c%s", "color:red", 'beforeMount data====>', this.$data);
+            console.log("%c%s", "color:red", 'beforeMount message====>', this.message);
+            const pNode = document.querySelector('p');
+            console.log("%c%s", "color:red",'beforeMount 访问DOM ===>', pNode, pNode.textContent);
+            console.log("%c%s", "color:red",'beforeMount $refs.info ===>', this.$refs.info);
+        },
+        // el 绑定的元素被内部新创建的 $el 替换掉，并且挂载到实例上去之后调用
+        mounted () {
+            console.group('mounted hook========>');
+            console.log("%c%s", "color:red",'mounted el====>', this.$el);
+            console.log("%c%s", "color:red", 'mounted data====>', this.$data);
+            console.log("%c%s", "color:red", 'mounted message====>', this.message);
+            const pNode = document.querySelector('p');
+            console.log("%c%s", "color:red",'mounted 访问DOM ===>', pNode, pNode.textContent);
+            console.log("%c%s", "color:red",'mounted $refs.info ===>', this.$refs.info);
+            // 改变 message 值，触发 beforeUpdate 与 updated 钩子函数。
+            this.message = 'change value';
+        },
+        // 数据更新时调用，发生在虚拟DOM重新渲染和打补丁之前
+        beforeUpdate () {
+            // this.message = 'hehehhe';
+            console.group('beforeUpdate hook========>');
+            console.log("%c%s", "color:red",'beforeUpdate this.message===>', this.message);
+            // 注意：此时DOM节点中的值并没有被更新
+            console.log("%c%s", "color:red",'beforeUpdate this.$refs.info.textContent ===>', this.$refs.info.textContent);
+        },
+        // 由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子
+        updated () {
+            console.group('updated hook========>');
+            console.log("%c%s", "color:red",'updated message===>', this.message);
+            console.log("%c%s", "color:red",'updated this.$refs.info.textContent ===>', this.$refs.info.textContent);
+        },
+        // 实例销毁之前调用。在这步实例仍然完全可以
+        beforeDestroy () {
+
+        },
+        // Vue实例销毁后调用。调用后，Vue实例的所有东西都会解绑定，所有的事件监听器会被移除。
+        // 所有的子实例也会被销毁，该钩子在服务器端渲染期间不被调用。
+        destroyed () {
+
+        }
+    })
+</script>
+</body>
+</html>
